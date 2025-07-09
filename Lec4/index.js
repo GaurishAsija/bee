@@ -15,46 +15,85 @@ let product = [{
     quantity : 10
 },
 {
-    name: "Iphone 16",
+    name: "iphone",
     amount : 100000,
     quantity : 0
 }];
 
-function buyProduct(product_name, cb) {
-    let isproduct = product.filter((p) => p.name == product_name)[0];
-    if (!isproduct) {
-        cb("Product not found", null);
-        return; // Prevents calling cb twice
-    }
-    if (isproduct.quantity <= 0) {
-        cb("Product out of stock", null);
-        return;
-    }
-    cb(null, isproduct.amount);
-}
-let AvailableAmount = 80000;
-console.log("Available Amount =", AvailableAmount);
+// function buyProduct(product_name, cb) {
+//     let isproduct = product.filter((p) => p.name == product_name)[0];
+//     if (!isproduct) {
+//         cb("Product not found", null);
+//         return; // Prevents calling cb twice
+//     }
+//     if (isproduct.quantity <= 0) {
+//         cb("Product out of stock", null);
+//         return;
+//     }
+//     cb(null,isproduct.amount);
+// }
 
-function deductbankamount(amount, cb) {
-    //do some Transactions
-    if (AvailableAmount < amount) {
-        cb("Insufficient bank balance", null);
-        return;
-    }
-    AvailableAmount -= amount;
-    // Simulate a delay for the transaction 
-    console.log("available amount =",AvailableAmount);
-    
-    cb(null, "Transaction successful");
-}
-    
+let available_amount = 200000;
 
-buyProduct("samsung", function(err, amount){
-    if(err) return console.log(err);
-    console.log("amount of phone =", amount);
-    
-    deductbankamount(amount, function(err, msg){
-        if(err) return console.log(err);
-        console.log(msg);
+// function deductbankamount(amount, cb) {
+//     if (amount > available_amount) {
+//         return cb ("Insufficient bank balance", null);
+//     }else{
+//         available_amount -= amount;
+//         cb(null, "amount deducted");
+//         console.log("Availaible amount:",available_amount);
+
+//     }
+// }
+
+
+// buyProduct("samsung", function(err, amount){
+//     if(err) return console.log(err);;
+//     console.log("Cost of device:",amount);
+//     deductbankamount(amount, function(err, msg){
+//         if(err) return console.log(err);
+//         console.log(msg);
+// })
+// });
+
+// Promise version of the above code
+function buyProduct(product_name) {
+    return new Promise((resolve, reject) => {
+        let isproduct = product.filter((p) => p.name == product_name)[0];
+        if (!isproduct) {
+            reject("Product not found");
+            return;
+        }
+        if (isproduct.quantity <= 0) {
+            reject("Product out of stock");
+            return;
+        }
+        resolve(isproduct.amount);
     });
-});
+}
+
+function deductbankamount(amount) {
+    return new Promise((resolve, reject) => {
+        if (amount > available_amount) {
+            reject("Insufficient bank balance");
+        } else {
+            available_amount -= amount;
+            console.log("Availaible amount:", available_amount);
+            resolve("amount deducted");
+        }
+    });
+}
+
+// Usage example:
+buyProduct("samsung")
+    .then(amount => {
+        console.log("Cost of device:", amount);
+        return deductbankamount(amount);
+    })
+    .then(msg => {
+        console.log(msg);
+    })
+    .catch(err => {
+        console.log(err);
+    });
+
