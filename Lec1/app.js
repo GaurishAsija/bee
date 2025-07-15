@@ -10,3 +10,4 @@ function multiply(a, b) {
 add(2, 3);
 subtract(5, 2);
 multiply(4, 3);
+console.log("Hello")

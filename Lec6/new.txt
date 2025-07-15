@@ -1,0 +1,2 @@
+g26 hello
+i am demo2 file
