@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
 //   res.sendFile(__dirname + '/index.html');
 
 //   res.json({
-//     name: 'Vansh',
+//     name: 'Gaurish',
 //     age: 20,
 //   })
 res.end("hi"); //can only send string and response header set nahi hoga
